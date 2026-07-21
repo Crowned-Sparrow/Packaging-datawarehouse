@@ -28,7 +28,7 @@ class CorrugatingMachine(Machine):
     __tablename__ = "dim_machines"
     __table_args__ = (
         CheckConstraint("flute_type IN ('A','B','C','E','F')", name="CK_flute_type"),
-        {"schema": "Corrugating"},
+        {"schema": "corrugating"},
     )
 
     machine_id = Column(Integer, primary_key=True)

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Corrugating.dim_machines(
+CREATE TABLE IF NOT EXISTS corrugating.dim_machines(
     machine_id          SERIAL PRIMARY KEY,
     machine_name        VARCHAR(100) NOT NULL UNIQUE,
     flute_type          VARCHAR(20)  CHECK (flute_type IN ('A', 'B', 'C', 'E', 'F')),

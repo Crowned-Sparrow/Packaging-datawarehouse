@@ -1,1 +1,1 @@
-CREATE SCHEMA IF NOT EXISTS Corrugating ;
+CREATE SCHEMA IF NOT EXISTS corrugating ;

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Corrugating.fact_machine_breakdown_logs(
+CREATE TABLE IF NOT EXISTS corrugating.fact_machine_breakdown_logs(
     breakdown_log_id       SERIAL PRIMARY KEY,
     machine_id             INT NOT NULL,
     supervisor_id           INT NOT NULL,

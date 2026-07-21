@@ -1,5 +1,5 @@
 -- Machine breakdown table
-CREATE TABLE IF NOT EXISTS Corrugating.dim_machine_breakdowns(
+CREATE TABLE IF NOT EXISTS corrugating.dim_machine_breakdowns(
     breakdown_code         SERIAL PRIMARY KEY,
     description              TEXT NOT NULL,
     how_to_handle             TEXT NOT NULL,
