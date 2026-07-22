@@ -97,8 +97,10 @@ def list_supply_detail(
     current_employee: Employee = Depends(get_current_employee),
 ):
     query = db.query(SupplyDetail)
-    if status:
-        query = query.filter(SupplyDetail.order_status == status)
+    if receive_date:
+        query = query.filter(SupplyDetail.receive_date <= receive_date)
+    if request_date:
+        query = query.filter(SupplyDetail.request_date >= request_date)
     return query.offset(skip).limit(limit).all()
 
 @router.get("/find/supply_details/{supply_detail_id}", response_model=SupplyDetailOut)

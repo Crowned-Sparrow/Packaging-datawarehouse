@@ -1,4 +1,3 @@
-# app/models/customer.py
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from app.models.order import Order

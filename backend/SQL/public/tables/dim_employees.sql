@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS dim_employees(
     title               VARCHAR(50) NOT NULL,
     contact_email       VARCHAR(50) NOT NULL,
     contact_phone       VARCHAR(20) NOT NULL,
-    hash_password       VARCHAR(50) NOT NULL
+    hash_password       VARCHAR(60) NOT NULL
 );
