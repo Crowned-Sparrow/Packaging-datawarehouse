@@ -1,0 +1,1 @@
+﻿-- No triggers beyond those defined in tables

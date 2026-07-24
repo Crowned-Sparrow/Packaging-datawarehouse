@@ -5,21 +5,23 @@ import os
 from pathlib import Path
 from typing import Any
 
+import polars as pl
+
 try:
     from backend.etl.extract import APIConfig, APIReader, PostgresReader
     from backend.etl.load import ParquetWriter, PostgresWriter
     from backend.etl.transform import (
-        build_training_dataset,
-        clean_breakdown_logs,
-        clean_production_logs,
+        clean_breakdown_logs_df,
+        clean_production_logs_df,
+        build_training_dataset_df,
     )
 except ImportError:  # pragma: no cover - fallback for running from backend folder
     from etl.extract import APIConfig, APIReader, PostgresReader
     from etl.load import ParquetWriter, PostgresWriter
     from etl.transform import (
-        build_training_dataset,
-        clean_breakdown_logs,
-        clean_production_logs,
+        clean_breakdown_logs_df,
+        clean_production_logs_df,
+        build_training_dataset_df,
     )
 
 
@@ -29,7 +31,7 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def run_daily_batch(output_path: str | Path | None = None) -> dict[str, Any]:
-    """ETL daily mẫu: extract -> transform -> load cho breakdown risk dataset."""
+    """ETL daily end-to-end Polars: extract -> transform (DF) -> load."""
     postgres_reader = PostgresReader.from_env()
     raw_production_logs = postgres_reader.extract_table(
         schema="corrugating",
@@ -45,12 +47,16 @@ def run_daily_batch(output_path: str | Path | None = None) -> dict[str, Any]:
     )
     postgres_reader.close()
 
-    cleaned_production_logs = clean_production_logs(raw_production_logs)
-    cleaned_breakdown_logs = clean_breakdown_logs(raw_breakdown_logs)
-    training_dataset = build_training_dataset(cleaned_production_logs, cleaned_breakdown_logs)
+    production_frame = pl.from_dicts(raw_production_logs)
+    breakdown_frame = pl.from_dicts(raw_breakdown_logs)
+
+    cleaned_production = clean_production_logs_df(production_frame)
+    cleaned_breakdown = clean_breakdown_logs_df(breakdown_frame)
+
+    training_frame = build_training_dataset_df(cleaned_production, cleaned_breakdown)
 
     parquet_writer = ParquetWriter(OUTPUT_DIR)
-    parquet_path = parquet_writer.write("training_breakdown_risk", training_dataset)
+    parquet_path = parquet_writer.write("training_breakdown_risk", training_frame.to_dicts())
 
     loaded_row_count = 0
     load_to_postgres = os.getenv("ETL_LOAD_TO_POSTGRES", "false").lower() == "true"
@@ -59,7 +65,7 @@ def run_daily_batch(output_path: str | Path | None = None) -> dict[str, Any]:
         loaded_row_count = postgres_writer.write_rows(
             schema="ml",
             table="training_breakdown_risk",
-            rows=training_dataset,
+            rows=training_frame.to_dicts(),
             mode="replace",
         )
         postgres_writer.close()
@@ -67,7 +73,7 @@ def run_daily_batch(output_path: str | Path | None = None) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "raw_production_count": len(raw_production_logs),
         "raw_breakdown_count": len(raw_breakdown_logs),
-        "training_row_count": len(training_dataset),
+        "training_row_count": training_frame.height,
         "parquet_path": str(parquet_path),
         "postgres_loaded_rows": loaded_row_count,
     }

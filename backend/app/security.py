@@ -52,3 +52,14 @@ def decode_access_token(token: str) -> dict | None:
     except JWTError:
         return None
     
+password = '123abc'
+print("PASS:")
+hashed = hash_password(password)
+
+print(f"Plain password: {password}")
+print(f"Hashed password: {hashed}")
+print(f"Hash length: {len(hashed)}")
+
+# Check password verification
+is_correct = verify_password(password, hashed)
+print(f"Password verification successful: {is_correct}")
