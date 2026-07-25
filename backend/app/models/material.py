@@ -11,9 +11,6 @@ class Material(Base):
     material_type = Column(String(50), nullable=False)
     unit = Column(String(20), nullable=False)
 
-    # BẮT BUỘC THÊM DÒNG NÀY ĐỂ ĐỐI ỨNG VỚI SUPPLYDETAIL
-    supply_details = relationship("SupplyDetail", back_populates="material")
-
     __table_args__ = (
         CheckConstraint(
             "material_type IN ('paper', 'ink', 'glue', 'other')", 

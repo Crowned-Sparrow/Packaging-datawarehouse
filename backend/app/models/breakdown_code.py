@@ -17,7 +17,6 @@ class BreakDownCode(Base):
     how_to_handle = Column(Text)
     expected_downtime_minutes = Column(Integer)
 
-    machineBreakDownLog = relationship("MachineBreakDownLog", back_populates="code")
-
+    machineBreakDownLog = relationship("CorrugatingBreakDownLog", back_populates="code")
     def __repr__(self):
         return f"<BreakDownCode code={self.breakdown_code} description={self.description!r}>"

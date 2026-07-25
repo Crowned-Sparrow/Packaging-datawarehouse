@@ -5,7 +5,7 @@ from datetime import datetime
 
 from app.core.database import get_db
 from app.models.breakdown_code import BreakDownCode
-from app.models.breakdown_log import MachineBreakDownLog
+from app.models.breakdown_log import CorrugatingBreakDownLog
 from app.models.employee import Employee
 from app.schemas.breakdown_code import (
     BreakDownCodeCreate,
@@ -110,7 +110,7 @@ def add_breakdown_log(
     current_employee: Employee = Depends(get_current_employee),
 ):
     try:
-        breakdown_log = MachineBreakDownLog(
+        breakdown_log = CorrugatingBreakDownLog(
             machine_id=payload.machine_id,
             supervisor_id=payload.supervisor_id,
             breakdown_code=payload.breakdown_code,
@@ -143,19 +143,19 @@ def list_breakdown_logs(
     pds: Optional[str] = None,
     current_employee: Employee = Depends(get_current_employee),
 ):
-    query = db.query(MachineBreakDownLog)
+    query = db.query(CorrugatingBreakDownLog)
     if start_time:
-        query = query.filter(MachineBreakDownLog.breakdown_time >= start_time)
+        query = query.filter(CorrugatingBreakDownLog.breakdown_time >= start_time)
     if end_time:
-        query = query.filter(MachineBreakDownLog.breakdown_time <= end_time)
+        query = query.filter(CorrugatingBreakDownLog.breakdown_time <= end_time)
     if machine_id:
-        query = query.filter(MachineBreakDownLog.machine_id == machine_id)
+        query = query.filter(CorrugatingBreakDownLog.machine_id == machine_id)
     if supervisor_id:
-        query = query.filter(MachineBreakDownLog.supervisor_id == supervisor_id)
+        query = query.filter(CorrugatingBreakDownLog.supervisor_id == supervisor_id)
     if breakdown_code:
-        query = query.filter(MachineBreakDownLog.breakdown_code == breakdown_code)
+        query = query.filter(CorrugatingBreakDownLog.breakdown_code == breakdown_code)
     if pds:
-        query = query.filter(MachineBreakDownLog.pds.ilike(f"%{pds}%"))
+        query = query.filter(CorrugatingBreakDownLog.pds.ilike(f"%{pds}%"))
     return query.offset(skip).limit(limit).all()
 
 @router.get("/breakdown-logs/find/{breakdown_log_id}", response_model=MachineBreakDownLogOut)
@@ -164,7 +164,7 @@ def find_breakdown_log(
     db: Session = Depends(get_db),
     current_employee: Employee = Depends(get_current_employee),
 ):
-    log = db.query(MachineBreakDownLog).filter(MachineBreakDownLog.breakdown_log_id == breakdown_log_id).first()
+    log = db.query(CorrugatingBreakDownLog).filter(CorrugatingBreakDownLog.breakdown_log_id == breakdown_log_id).first()
     if not log:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -179,7 +179,7 @@ def update_breakdown_log(
     db: Session = Depends(get_db),
     current_employee: Employee = Depends(get_current_employee),
 ):
-    log = db.query(MachineBreakDownLog).filter(MachineBreakDownLog.breakdown_log_id == breakdown_log_id).first()
+    log = db.query(CorrugatingBreakDownLog).filter(CorrugatingBreakDownLog.breakdown_log_id == breakdown_log_id).first()
     if not log:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
