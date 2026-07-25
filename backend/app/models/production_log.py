@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DECIMAL, Integer, String, ForeignKey, CheckConstraint, DateTime, Text
 from app.core.database import Base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declared_attr
 
 
 class ProductionLog(Base):
@@ -14,10 +14,21 @@ class ProductionLog(Base):
     operator_id   = Column(Integer, ForeignKey("dim_employees.employee_id"), nullable=False)
     supervisor_id = Column(Integer, ForeignKey("dim_employees.employee_id"), nullable=False)
 
-    leader = relationship("Leader", back_populates="production_log")
-    manager= relationship("Manger", back_populates= "production_log")
-    operator= relationship("Operator", back_populates="production_log")
-    supervisor = relationship("Supervisor", back_populates="production_log")
+    @declared_attr
+    def leader(cls):
+        return relationship("Employee", foreign_keys=[cls.leader_id])
+
+    @declared_attr
+    def manager(cls):
+        return relationship("Employee", foreign_keys=[cls.manager_id])
+
+    @declared_attr
+    def operator(cls):
+        return relationship("Employee", foreign_keys=[cls.operator_id])
+
+    @declared_attr
+    def supervisor(cls):
+        return relationship("Employee", foreign_keys=[cls.supervisor_id])
 
     start_time = Column(DateTime, nullable=False)
     end_time   = Column(DateTime)
@@ -38,9 +49,9 @@ class CorrugatingProductionLog(ProductionLog):
 
     machine_id = Column(Integer, ForeignKey("corrugating.dim_machines.machine_id"), nullable=False)
     product_id = Column(Integer, ForeignKey("corrugating.fact_products.product_id"), nullable=False)
-    
-    machine = relationship("Machine",back_populates="production_log")
-    product = relationship("Product", back_populates="production_log")
+
+    machine = relationship("CorrugatingMachine")
+    # product = relationship("Product")  # chưa có model Product -> xem ghi chú bên dưới
 
     cut_pallet_count         = Column(Integer)
     waste_endroll_weight     = Column(DECIMAL(10, 2))

@@ -15,7 +15,7 @@ class MachineBreakDownLog(Base):
     breakdown_log_id = Column(Integer, primary_key=True)
     machine_id = Column(ForeignKey("corrugating.dim_machines.machine_id"), nullable=False)
     supervisor_id = Column(ForeignKey("dim_employees.employee_id"), nullable=False)
-    breakdown_code = Column(ForeignKey("corrugating.dim_machine_breakdowns"), nullable=False)
+    breakdown_code = Column(ForeignKey("corrugating.dim_machine_breakdowns.breakdown_code"), nullable=False)
     pds = Column(String(20), nullable=False)
     breakdown_time = Column(DateTime, nullable=False)
     recovery_time = Column(DateTime)

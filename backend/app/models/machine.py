@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declared_attr
 from app.core.database import Base
 
 
@@ -11,7 +11,9 @@ class Machine(Base):
     lead_operator_id  = Column(Integer, ForeignKey("dim_employees.employee_id"), nullable=False)
     machine_status    = Column(String(20), nullable=False)
 
-    lead_operator = relationship("Operator", back_populates="machines")
+    @declared_attr
+    def lead_operator(cls):
+        return relationship("Employee")
 
     __table_args__ = (
         CheckConstraint(

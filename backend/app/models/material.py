@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, CheckConstraint
+from sqlalchemy.orm import relationship  # <-- THÊM DÒNG NÀY
 from app.core.database import Base
 
 class Material(Base):
@@ -9,6 +10,9 @@ class Material(Base):
     material_name = Column(String(100), nullable=False) 
     material_type = Column(String(50), nullable=False)
     unit = Column(String(20), nullable=False)
+
+    # BẮT BUỘC THÊM DÒNG NÀY ĐỂ ĐỐI ỨNG VỚI SUPPLYDETAIL
+    supply_details = relationship("SupplyDetail", back_populates="material")
 
     __table_args__ = (
         CheckConstraint(

@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.core.database import Base 
 
 class SupplyDetail(Base): 
-    __tablename__ = "fact_supply_detail" 
+    __tablename__ = "fact_supply_details" 
     
     supply_detail_id = Column(Integer, primary_key=True) 
     supplier_id = Column(Integer, ForeignKey("dim_suppliers.supplier_id"), nullable=False) 
@@ -15,8 +15,8 @@ class SupplyDetail(Base):
     request_date = Column(Date, nullable=False) 
     receive_date = Column(Date, nullable=False) 
     
-    supplier = relationship("Supplier", back_populates="supply_details") 
-    material = relationship("Material", back_populates="supply_details") 
+    supplier = relationship("Supplier") 
+    material = relationship("Material") 
     
     __table_args__ = ( 
         CheckConstraint( "quantity > 0", name="CK_supply_detail_quantity_positive" ), 

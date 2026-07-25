@@ -1,8 +1,8 @@
-# routers/corrugating/router.py
 from fastapi import APIRouter
 from . import machines, production_logs, breakdowns
 
-router = APIRouter(prefix="/api/corrugating", tags=["corrugating"])
-router.include_router(machines.router)
-router.include_router(production_logs.router)
-router.include_router(breakdowns.router)
+router = APIRouter(prefix="/corrugating", tags=["Corrugating"])
+
+router.include_router(machines.router, prefix="/machines")
+router.include_router(production_logs.router, prefix="/logs")
+router.include_router(breakdowns.router, prefix="/breakdowns")

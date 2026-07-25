@@ -7,8 +7,9 @@ from app.models.production_log import CorrugatingProductionLog
 from app.models.employee import Employee
 from app.schemas.production_log import CorrugatingProductionLogCreate, CorrugatingProductionLogOut, CorrugatingUpdateProductionLog
 from app.dependencies import get_current_employee
-from .router import router
 from typing import Optional
+
+router = APIRouter()
 
 @router.post("/add", response_model= CorrugatingProductionLogOut)
 def add_machine(payload: CorrugatingProductionLogCreate, db: Session = Depends(get_db)

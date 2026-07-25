@@ -1,14 +1,12 @@
 #backend/app/security
 from datetime import datetime, timedelta, timezone
 
+import bcrypt
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import os
-from pathlib import Path
 
 # Lấy đường dẫn tới thư mục hiện tại của file security.py
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -22,19 +20,17 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY chưa được cấu hình trong biến môi trường")
 
-# bcrypt tự sinh salt ngẫu nhiên cho mỗi mật khẩu và tự nhúng vào chuỗi hash,
-# nên không cần cột "salt" riêng trong database.
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 def hash_password(plain_password: str) -> str:
     """Dùng khi TẠO tài khoản nhân viên mới, trước khi lưu vào hash_password."""
-    return pwd_context.hash(plain_password)
+    password_bytes = plain_password.encode("utf-8")
+    return bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """So khớp mật khẩu người dùng nhập với hash lưu trong DB (constant-time)."""
-    return pwd_context.verify(plain_password, hashed_password)
+    password_bytes = plain_password.encode("utf-8")
+    hash_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password_bytes, hash_bytes)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
@@ -51,15 +47,3 @@ def decode_access_token(token: str) -> dict | None:
         return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
         return None
-    
-password = '123abc'
-print("PASS:")
-hashed = hash_password(password)
-
-print(f"Plain password: {password}")
-print(f"Hashed password: {hashed}")
-print(f"Hash length: {len(hashed)}")
-
-# Check password verification
-is_correct = verify_password(password, hashed)
-print(f"Password verification successful: {is_correct}")

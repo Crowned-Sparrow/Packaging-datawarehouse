@@ -1,5 +1,6 @@
 # app/models/customer.py
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship  # <-- THÊM DÒNG NÀY
 from app.core.database import Base
 
 
@@ -10,6 +11,9 @@ class Supplier(Base):
     supplier_name   = Column(String(100), nullable=False)
     contact_phone   = Column(String(20), nullable=False)
     contact_email   = Column(String(50), nullable=False)
+
+    # BẮT BUỘC THÊM DÒNG NÀY ĐỂ LIÊN KẾT VỚI BẢNG SUPPLYDETAIL
+    #supply_details = relationship("SupplyDetail", back_populates="supplier")
 
     def __repr__(self):
         return f"<Supplier id={self.supplier_id} name={self.supplier_name!r} email={self.contact_email!r} phone={self.contact_phone!r}>"

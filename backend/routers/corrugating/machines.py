@@ -7,7 +7,7 @@ from app.models.machine import CorrugatingMachine
 from app.models.employee import Employee
 from app.schemas.machine import CorrugatingMachineCreate, CorrugatingMachineOut, MachineUpdateStatus
 from app.dependencies import get_current_employee
-from .router import router
+router = APIRouter()
 
 @router.post("/add", response_model= CorrugatingMachineOut)
 def add_machine(payload: CorrugatingMachineCreate, db: Session = Depends(get_db)

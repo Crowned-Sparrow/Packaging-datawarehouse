@@ -12,7 +12,7 @@ class Customer(Base):
     contact_phone   = Column(String(20), nullable=False)
     contact_email   = Column(String(50), nullable=False)
 
-    orders = relationship("Order", back_populates="customer")
+    #orders = relationship("Order", back_populates="customer")
 
     def __repr__(self):
         return f"<Customer id={self.customer_id} name={self.customer_name!r} email={self.contact_email!r} phone={self.contact_phone!r}>"

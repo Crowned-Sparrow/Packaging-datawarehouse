@@ -29,7 +29,7 @@ class Order(Base):
         ),
     )
 
-    customer = relationship("Customer", back_populates="orders")
+    customer = relationship("Customer")
 
     def __repr__(self):
         return f"<Order id={self.order_id} pds={self.pds!r} status={self.order_status!r}>"

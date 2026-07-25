@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status,APIRouter
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
@@ -18,7 +18,7 @@ from app.schemas.breakdown_log import (
     UpdateMachineBreakDownLog,
 )
 from app.dependencies import get_current_employee
-from .router import router
+router = APIRouter()
 
 @router.post("/breakdown-codes/add", response_model=BreakDownOut)
 def add_breakdown_code(
