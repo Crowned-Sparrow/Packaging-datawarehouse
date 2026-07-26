@@ -1,1 +1,0 @@
-﻿-- No additional constraints beyond those defined in table creation
