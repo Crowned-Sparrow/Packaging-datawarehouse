@@ -12,13 +12,16 @@ from lifelines.utils import k_fold_cross_validation
 logger = logging.getLogger(__name__)
 
 FEATURE_COLS = [
-    "avg_utilization",
-    "prior_breakdown_count",
-    "total_runs",
     "machine_age_days",
+    "prior_breakdown_count",
+    "lifetime_avg_downtime_minutes",
+    "runs_30d",
+    "utilization_30d",
+    "waste_ratio_30d",
+    "breakdown_count_90d",
 ]
 CATEGORICAL_COLS = ["flute_type"]
-
+ 
 REQUIRED_COLS = FEATURE_COLS + CATEGORICAL_COLS + ["duration_days", "event_observed"]
 
 
