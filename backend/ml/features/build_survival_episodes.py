@@ -99,7 +99,7 @@ def _compute_episode_features(
     rolling_feats = build_rolling_features(
         machine_id, production_logs, breakdown_logs,
         as_of=episode_start,
-        windows_days=(30,),  # episode feature dùng window 30d làm đại diện
+        windows_days=(7,30,90),  # episode feature dùng window 30d làm đại diện
     )
 
     return {**static_feats, **rolling_feats, "prior_breakdown_count": prior_breakdown_count}

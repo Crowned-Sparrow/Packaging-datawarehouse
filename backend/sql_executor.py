@@ -86,7 +86,7 @@ class SQLExecutor:
         Toàn bộ chạy trong 1 transaction duy nhất — lỗi bất kỳ đâu sẽ rollback hết.
         """
         if schema_folder_map is None:
-            schema_folder_map = {"public": None, "corrugating": "corrugating"}
+            schema_folder_map = {"public": None, "corrugating": "corrugating", "ml":"ml"}
         mother_path = Path(mother_path)
         with self.engine.begin() as conn:   # mở transaction 1 LẦN duy nhất, không lồng
             self.logger.info(f"[SQL EX]: Init database từ {mother_path}")
