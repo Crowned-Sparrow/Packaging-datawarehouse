@@ -25,11 +25,6 @@ ALTER TABLE corrugating.fact_production_supply_usages
         FOREIGN KEY (supply_detail_id)
         REFERENCES fact_supply_details(supply_detail_id);
 
-ALTER TABLE corrugating.fact_products
-    ADD CONSTRAINT FK_Co_product_pds
-        FOREIGN KEY (pds)
-        REFERENCES fact_orders(pds);
-
 ALTER TABLE corrugating.fact_production_logs
     ADD CONSTRAINT FK_Co_production_log_machine
         FOREIGN KEY (machine_id)
