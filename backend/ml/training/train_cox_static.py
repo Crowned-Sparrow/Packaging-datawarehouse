@@ -10,11 +10,11 @@ from lifelines import CoxPHFitter
 from lifelines.utils import k_fold_cross_validation
 
 logger = logging.getLogger(__name__)
-
+## **NOTE**: Tạm tắt 1 số feauture
 FEATURE_COLS = [
     "machine_age_days",
     "prior_breakdown_count",
-    "lifetime_avg_downtime_minutes",
+    #"lifetime_avg_downtime_minutes", nếu có data thật không phải tự tạo ngẫu nhiên thì bật feature này
     "runs_30d",
     "utilization_30d",
     "waste_ratio_30d",

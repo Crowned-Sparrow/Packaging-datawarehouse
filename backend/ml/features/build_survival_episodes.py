@@ -32,10 +32,13 @@ def build_survival_episodes(
         if cursor is None:
             continue
 
-        breakdown_times = m_breakdowns["breakdown_time"].to_list()
+        breakdown_rows = m_breakdowns.select(["breakdown_time", "recovery_time"]).to_dicts()
         prior_count = 0
 
-        for bt in breakdown_times:
+        for row in breakdown_rows:
+            bt = row["breakdown_time"]
+            rt = row["recovery_time"]
+
             duration_days = (bt - cursor).total_seconds() / 86400
             if duration_days <= 0:
                 continue
@@ -56,8 +59,14 @@ def build_survival_episodes(
                 "event_observed": 1,
                 **episode_features,
             })
-            cursor = bt          # reset mốc sau khi sửa xong
             prior_count += 1
+
+            # Episode kế tiếp bắt đầu khi máy đã sửa xong (recovery_time),
+            # không phải ngay tại thời điểm hỏng. Nếu recovery_time NULL
+            # (sự cố chưa xử lý xong trong dữ liệu), tạm dùng breakdown_time
+            # để không crash pipeline, nhưng nên rà lại các dòng breakdown
+            # thiếu recovery_time trước khi build lại toàn bộ episode.
+            cursor = rt if rt is not None else bt
 
         # episode cuối: censored, kéo dài tới as_of_date
         final_duration = (as_of_date - cursor).total_seconds() / 86400
