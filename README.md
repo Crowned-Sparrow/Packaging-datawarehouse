@@ -149,15 +149,15 @@ Pipeline chính: `backend/etl/pipelines/daily_batch.py` — trích xuất log s�
 ### Kết quả hiện tại (trên `data_samples/`)
 
 ```
-episode_count: 101, event_count: 97
+episode_count: 101, event_count: 97 (chỉ 4 máy)
 Concordance (in-sample): 0.63
-Concordance (5-fold CV): 0.580 ± 0.055
-Không feature nào đạt p < 0.05
+Concordance (5-fold CV): 0.596 ± 0.048
+Cluster-robust SE theo machine_id: waste_ratio_30d (p<0.005), flute_type_T (p=0.05)
 Log-likelihood ratio test: p ≈ 0.063 (ranh giới ngưỡng ý nghĩa 0.05)
 Proportional Hazards assumption: OK
 ```
 
-**Diễn giải:** model hiện tại **chưa đạt mức đáng tin cậy để dùng cho quyết định vận hành thật**. C-index ~0.58 chỉ nhỉnh hơn đoán ngẫu nhiên (0.5), và không feature nào có ý nghĩa thống kê rõ ràng. Đây là hệ quả trực tiếp của giới hạn dữ liệu mẫu (xem phần dưới), không phải lỗi thiết kế pipeline — pipeline đã được kiểm chứng chạy đúng logic (survival cutting, tránh leakage, đánh giá bằng CV, kiểm tra PH assumption).
+**Diễn giải:** model hiện tại **chưa đạt mức đáng tin cậy để dùng cho quyết định vận hành thật**. C-index ~0.6 chỉ nhỉnh hơn đoán ngẫu nhiên (0.5). Sau khi bật cluster-robust standard error theo `machine_id`, một vài feature (`waste_ratio_30d`, `flute_type_T`) trông "có ý nghĩa thống kê" hơn — nhưng **không đáng tin do chỉ có 4 cluster** (xem mục Giới hạn hiện tại), không nên coi là tín hiệu thật. Đây là hệ quả trực tiếp của giới hạn dữ liệu mẫu, không phải lỗi thiết kế pipeline — pipeline đã được kiểm chứng chạy đúng logic (survival cutting, tránh leakage, đánh giá bằng CV, kiểm tra PH assumption, cluster theo máy).
 
 ## Cài đặt & chạy thử
 
@@ -188,19 +188,15 @@ python -m backend.ml.pipelines.run_training
 
 ## Giới hạn hiện tại
 
-Ghi lại minh bạch để tránh hiểu nhầm khi đọc kết quả hoặc mở rộng dự án:
-
 1. **`data_samples/` là dữ liệu mẫu, không phải dữ liệu vận hành thật.** Cột `recovery_time` trong `breakdownlog.csv` được **random sinh dựa trên khung giờ ca làm việc** (công ty gốc không lưu thời điểm sửa xong), nên mọi feature tính từ `recovery_time` (`lifetime_avg_downtime_minutes`, `downtime_minutes_*`, `days_since_last_breakdown`) **đã bị loại khỏi tập train** vì không phản ánh dữ liệu thật.
-2. **Số lượng máy trong dữ liệu mẫu quá ít** (~4-6 máy) so với số episode (101) — mỗi máy đóng góp nhiều episode liên tiếp, các quan sát không hoàn toàn độc lập (vi phạm nhẹ giả định của Cox model). Khuyến nghị dùng `cluster_col="machine_id"` khi có dữ liệu lớn hơn.
+2. **Số lượng máy trong dữ liệu mẫu quá ít** (4 máy) so với số episode (101) — mỗi máy đóng góp nhiều episode liên tiếp, các quan sát không hoàn toàn độc lập (vi phạm nhẹ giả định của Cox model). Đã bật `cluster_col="machine_id"` trong `train_cox_static.py` để tính cluster-robust standard error, nhưng **với chỉ 4 cluster, chính cluster-robust SE cũng không đáng tin** (quy tắc kinh nghiệm cần tối thiểu ~20-50 cluster để xấp xỉ tiệm cận hoạt động đúng — số cluster quá ít khiến SE dễ bị ước lượng thấp hơn thực tế, tạo false positive). Vì vậy **không nên diễn giải bất kỳ p-value nào từ model hiện tại là bằng chứng thống kê đáng tin**, kể cả sau khi đã cluster. Cần nhiều máy hơn (không chỉ nhiều episode hơn từ cùng vài máy) trước khi kết quả có thể tin dùng.
 3. **Một vài router/module còn thiếu sót đã biết**, ví dụ `backend/routers/corrugating/products.py` thiếu khởi tạo `router = APIRouter()` — cần sửa trước khi include vào `main.py` nếu module này được bật.
 4. **Chưa có test tự động** (unit test cho ETL transform, integration test cho API) — nên bổ sung trước khi coi đây là hệ thống production-ready.
-5. **FK giữa `fact_machine_breakdown_logs.pds` và `fact_orders.pds`** cần rà soát khi import dữ liệu mẫu, vì một số `pds` trong breakdown log không tồn tại trong `orders.csv` mẫu.
 
 ## Roadmap
 
 - [ ] Thu thập `recovery_time` thật từ vận hành, bật lại downtime-based features.
 - [ ] Mở rộng số lượng máy quan sát để Cox model tổng quát hoá tốt hơn.
-- [ ] Thêm `cluster_col="machine_id"` cho robust standard error.
 - [ ] Viết unit test cho `backend/etl/transform/` và `backend/ml/features/`.
 - [ ] Hoàn thiện `corrugating/products.py` router và bật vào `main.py`.
 - [ ] Dashboard hiển thị `relative_risk_score` theo máy trên frontend.
