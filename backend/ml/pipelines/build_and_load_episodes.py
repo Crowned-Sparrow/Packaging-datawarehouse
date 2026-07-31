@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any
 
 import polars as pl
-
 try:
     from backend.etl.extract import PostgresReader
     from backend.etl.load import PostgresWriter

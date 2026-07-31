@@ -8,8 +8,12 @@ from typing import Any
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine, URL
 
-IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+from pathlib import Path
+from dotenv import load_dotenv
 
+IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_BACKEND_DIR = Path(__file__).resolve().parents[2]
+load_dotenv(_BACKEND_DIR / "app" / "core" / "login.env")
 
 def _validate_identifier(name: str) -> str:
     if not IDENTIFIER_PATTERN.match(name):

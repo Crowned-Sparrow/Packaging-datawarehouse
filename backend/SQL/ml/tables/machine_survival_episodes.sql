@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS ml.machine_survival_episodes (
 
     episode_start   TIMESTAMP NOT NULL,
     episode_end     TIMESTAMP NOT NULL,   -- thời điểm hỏng, hoặc as_of_date nếu censored
-    duration_days   NUMERIC(10,2) NOT NULL CHECK (duration_days > 0),
+    duration_days   NUMERIC(10,2) NOT NULL CHECK (duration_days => 0),
     event_observed  INT NOT NULL CHECK (event_observed IN (0,1)),  -- 1=hỏng, 0=censored
     --  Static / lifetime features (tính tại thời điểm episode_start, tránh leak) 
     flute_type                     VARCHAR(20),
