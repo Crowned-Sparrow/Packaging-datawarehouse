@@ -15,7 +15,7 @@ class MachineBreakDownLogOut(BaseModel):
     machine_id: int
     supervisor_id: int
     breakdown_code:int
-    ##pds:str ẩn thông số production sheet code
+    pds:str
     breakdown_time: datetime
     recovery_time: Optional[datetime]
     breakdown_note: Optional[str]

@@ -22,4 +22,6 @@ class CorrugatingMachineCreate(MachineCreate):
     flute_type: Literal['A', 'B', 'C', 'E', 'F']
 
 class CorrugatingMachineOut(MachineOut):
-    flute_type:str
+    machine_name: str
+    lead_operator_id: int
+    flute_type: str
