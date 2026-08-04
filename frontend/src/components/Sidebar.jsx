@@ -30,6 +30,35 @@ const MENU = [
       { path: "/orders/add", label: "Thêm đơn hàng" },
     ],
   },
+  {
+    key: "material",
+    label: "Nguyên vật liệu",
+    items: [
+      { path: "/materials/list", label: "Danh sách nguyên vật liệu" },
+      { path: "/materials/add", label: "Thêm nguyên vật liệu" },
+    ],
+  },
+  {
+    key: "supply",
+    label: "Cung ứng",
+    items: [
+      { path: "/supplies/suppliers/list", label: "Danh sách nhà cung cấp" },
+      { path: "/supplies/suppliers/add", label: "Thêm nhà cung cấp" },
+      { path: "/supplies/details/list", label: "Chi tiết cung ứng" },
+    ],
+  },
+  {
+    key: "corrugating",
+    label: "Corrugating",
+    items: [
+      { path: "/corrugating/machines/list", label: "Danh sách máy" },
+      { path: "/corrugating/machines/add", label: "Thêm máy" },
+      { path: "/corrugating/logs/list", label: "Log sản xuất" },
+      { path: "/corrugating/logs/add", label: "Thêm log sản xuất" },
+      { path: "/corrugating/breakdowns/codes/list", label: "Mã lỗi breakdown" },
+      { path: "/corrugating/breakdowns/logs/list", label: "Log sự cố máy" },
+    ],
+  },
 ];
 
 export default function Sidebar() {

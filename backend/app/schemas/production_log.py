@@ -24,10 +24,15 @@ class ProductionLogOut(BaseModel):
 
     production_log_id: int
     pds: str
+    leader_id: int
+    manager_id: int
+    operator_id: int
+    supervisor_id: int
     start_time: datetime
     end_time: Optional[datetime] = None
     product_weight: Optional[float] = None
     material_weight: Optional[float] = None
+    log_note: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -46,6 +51,8 @@ class CorrugatingUpdateProductionLog(UpdateProductionLog):
 
 
 class CorrugatingProductionLogOut(ProductionLogOut):
+    machine_id: int
+    product_id: int
     cut_pallet_count: Optional[int] = None
     waste_endroll_weight: Optional[float] = None
     waste_trim_weight: Optional[float] = None
