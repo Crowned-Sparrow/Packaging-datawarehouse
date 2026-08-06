@@ -92,12 +92,13 @@ FastAPI, xác thực JWT (`python-jose` + `bcrypt`), SQLAlchemy ORM. Router chí
 - `/api/auth` — login, trả JWT access token.
 - `/api/employees`, `/api/customers`, `/api/orders`, `/api/materials`, `/api/supplies` — CRUD nghiệp vụ chung.
 - `/corrugating/machines`, `/corrugating/logs`, `/corrugating/breakdowns` — nghiệp vụ riêng công đoạn corrugating.
+- `/api/assistant/ask-sql` — nhân viên nhập câu hỏi tiếng Việt, Gemini sinh SQL chỉ đọc và backend thực thi trả dữ liệu.
 
 Toàn bộ endpoint (trừ `/api/auth/login`) yêu cầu `Bearer token`, xác thực qua `get_current_employee` dependency.
 
 ## Frontend
 
-React 19 + Vite + React Router 7. Layout dashboard có sidebar cố định, các trang list có filter debounce 400ms trước khi gọi API. Auth state lưu trong `localStorage`, tự động logout khi API trả 401 (qua axios interceptor).
+React 19 + Vite + React Router 7. Layout dashboard có sidebar cố định, các trang list có filter debounce 400ms trước khi gọi API. Auth state lưu trong `localStorage`, tự động logout khi API trả 401 (qua axios interceptor). Trang **Trợ lý SQL** cho phép nhân viên hỏi dữ liệu bằng ngôn ngữ tự nhiên và xem kết quả dạng bảng ngay trên UI.
 
 ## ETL Pipeline
 

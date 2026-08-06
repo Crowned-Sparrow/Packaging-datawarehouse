@@ -20,6 +20,7 @@ import BreakdownCodeList from "./pages/BreakdownCodeList";
 import AddBreakdownCode from "./pages/AddBreakdownCode";
 import BreakdownLogList from "./pages/BreakdownLogList";
 import AddBreakdownLog from "./pages/AddBreakdownLog";
+import SQLAssistant from "./pages/SQLAssistant";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="/employees/profile" element={<Profile />} />
             <Route path="/employees/list" element={<EmployeeList />} />
             <Route path="/employees/add" element={<AddEmployee />} />
+            <Route path="/employees/sql-assistant" element={<SQLAssistant />} />
 
             <Route path="/customers/list" element={<CustomerList />} />
             <Route path="/customers/add" element={<AddCustomer />} />

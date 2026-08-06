@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import employees, customers, orders, auth, supply, materials
+from routers import employees, customers, orders, auth, supply, materials,assistant
 from routers.corrugating.router import router as corrugating_router
 app = FastAPI()
 
@@ -21,3 +21,4 @@ app.include_router(auth.router)
 app.include_router(supply.router)
 app.include_router(materials.router)
 app.include_router(corrugating_router)
+app.include_router(assistant.router)

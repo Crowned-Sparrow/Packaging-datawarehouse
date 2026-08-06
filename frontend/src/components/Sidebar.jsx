@@ -12,6 +12,7 @@ const MENU = [
       { path: "/employees/profile", label: "Hồ sơ cá nhân" },
       { path: "/employees/list", label: "Danh sách nhân viên" },
       { path: "/employees/add", label: "Thêm nhân viên" },
+      { path: "/employees/sql-assistant", label: "Trợ lý SQL" },
     ],
   },
   {
