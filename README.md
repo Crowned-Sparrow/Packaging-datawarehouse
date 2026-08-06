@@ -45,7 +45,7 @@ Ba schema Postgres tách theo nghiệp vụ:
 
 ```
 backend/
-  app/            # FastAPI app: models (SQLAlchemy), schemas (Pydantic), core (DB, security)
+  app/            # FastAPI app: models (SQLAlchemy), schemas (Pydantic), core (DB, security), services(LLM client )
   routers/        # API endpoints, chia theo domain + subrouter cho corrugating
   SQL/            # Raw SQL: tables, functions, triggers, constraints — theo từng schema
   etl/            # Extract/Transform/Load bằng Polars, orchestration qua Airflow
@@ -196,8 +196,8 @@ python -m backend.ml.pipelines.run_training
 
 ## Roadmap
 
-- [ ] Thu thập `recovery_time` thật từ vận hành, bật lại downtime-based features.
 - [ ] Mở rộng số lượng máy quan sát để Cox model tổng quát hoá tốt hơn.
 - [ ] Viết unit test cho `backend/etl/transform/` và `backend/ml/features/`.
-- [ ] Hoàn thiện `corrugating/products.py` router và bật vào `main.py`.
+- [ ] Bổ sung logic nghiệp vụ (QC, vận hành, document ) --> vector hóa 
+- [ ] Tích hợp Cox vào LLM để diễn giải két quả thay vì số
 - [ ] Dashboard hiển thị `relative_risk_score` theo máy trên frontend.
